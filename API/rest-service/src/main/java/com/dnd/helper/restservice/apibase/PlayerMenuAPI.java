@@ -569,6 +569,16 @@ public class PlayerMenuAPI {
 	@GetMapping(value = "/getpcs")
 	public ResponseEntity<String> getPCsEndpoint() {
 		try {
+			return new ResponseEntity<> (new ObjectMapper().writeValueAsString(getPCsInMap()), HttpStatus.OK);
+		} catch (JsonProcessingException err) {
+	        System.out.println("Exception : "+err.toString());
+	        return new ResponseEntity<> (err.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+	    } 
+	}
+	
+	@GetMapping(value = "/getallpcs")
+	public ResponseEntity<String> getAllPCsEndpoint() {
+		try {
 			return new ResponseEntity<> (new ObjectMapper().writeValueAsString(getPCs()), HttpStatus.OK);
 		} catch (JsonProcessingException err) {
 	        System.out.println("Exception : "+err.toString());
@@ -1192,17 +1202,8 @@ public class PlayerMenuAPI {
 	}
 	
 	public Vector<String> getPCs() {
-		Vector<String> result = new Vector<>();
-		
-		Vector<DndCharacter> inMapChars = getCharacters(true);
-		if (inMapChars != null) {
-			for (DndCharacter d: inMapChars) { // in map
-				if (!d.isNpc()) {
-					result.add(d.getCharName());
-				}
-			}
-		}
-		
+		Vector<String> result = getPCsInMap();
+
 		Vector<DndCharacter> nonMapChars = getCharacters(false);
 		if (nonMapChars != null) {
 			for (DndCharacter d: nonMapChars) { // not in map
@@ -1213,6 +1214,21 @@ public class PlayerMenuAPI {
 		}
 		
 		return result;
+	}
+	
+	public Vector<String> getPCsInMap() {
+		Vector<String> result2 = new Vector<>();
+		
+		Vector<DndCharacter> inMapChars = getCharacters(true);
+		if (inMapChars != null) {
+			for (DndCharacter d: inMapChars) { // in map
+				if (!d.isNpc()) {
+					result2.add(d.getCharName());
+				}
+			}
+		}
+		
+		return result2;
 	}
 	
 	// Save to text file:
