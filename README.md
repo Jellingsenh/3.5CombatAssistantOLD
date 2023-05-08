@@ -47,3 +47,5 @@ Make sure to update your port forwarding for both the server & the webpage ports
 Don't use slashes ('\\' or '/') in your names! (it won't save)
 
 --------------------
+
+Connects to: https://github.com/bkim2134/TTS_DND
