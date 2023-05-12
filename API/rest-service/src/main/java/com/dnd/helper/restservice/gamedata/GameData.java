@@ -133,13 +133,13 @@ public class GameData implements Serializable {
 				}
 				System.out.println("Original character found: " + toBeDuped.getCharName());
 				
-				addCharacterNotInMap(createBaseCharacter(newChar, toBeDuped.getHealth(), toBeDuped.getInitiativeBonus(), 
+				addCharacterInMap(createBaseCharacter(newChar, toBeDuped.getHealth(), toBeDuped.getInitiativeBonus(), 
 						toBeDuped.getArmorClass(), toBeDuped.getTouchArmor(), toBeDuped.getFlatFooted(), toBeDuped.getRace(), 
 						toBeDuped.getSize(), toBeDuped.isNpc(), toBeDuped.getFortSave(), toBeDuped.getRefSave(), toBeDuped.getWillSave(), 
 						toBeDuped.grapple, toBeDuped.getSpeed(), toBeDuped.attacksString, toBeDuped.skillsString, toBeDuped.spellsString, 
 						toBeDuped.magicItemsString, toBeDuped.lootString, toBeDuped.featsString, toBeDuped.statusString, 
 						toBeDuped.otherString, toBeDuped.reactionsString, toBeDuped.resistancesString, toBeDuped.moreSpellsString, 
-						toBeDuped.otherAbilitiesString, toBeDuped.statsString));
+						toBeDuped.otherAbilitiesString, toBeDuped.statsString), "defaultMapLocation");
 				System.out.println("Duplicated " + charToDupeName + " to " + newChar);
 				
 			} catch (Exception e) {
