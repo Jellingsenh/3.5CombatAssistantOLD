@@ -531,6 +531,7 @@ public class PlayerMenuAPI {
 			if (inMapChars != null) {
 				for (DndCharacter d: inMapChars) { // in map
 					if (Objects.equals(d.getCharName(), characterName)) {
+						removeCharFromInitiativeOrder(d); // remove from init list
 						inMapChars.remove(d);
 						System.out.println("Removed character " + characterName);
 						return new ResponseEntity<> (new ObjectMapper().writeValueAsString(getAllCharacterNames()), HttpStatus.OK); // 200
@@ -631,21 +632,15 @@ public class PlayerMenuAPI {
 			Vector<DndCharacter> inMapChars = getCharacters(true);
 			Vector<DndCharacter> notInMapChars = getCharacters(false);
 			
-			
 			if (inMapChars != null) {
-				for (DndCharacter d : inMapChars) { // not in map
+				for (DndCharacter d : inMapChars) { // in map
 					if (Objects.equals(d.getCharName(), characterName)) {
 						if (notInMapChars != null) {
 							notInMapChars.add(d);
 							inMapChars.remove(d);
 						}
 						
-						// update next character if already next character
-						if (gameData.getNextCharacterName() != null && gameData.getNextCharacterName().equals(d.getCharName())) {
-							gameData.findNextCharacterOnRemove();
-						}
-						
-						gameData.removeCharacterFromInitMapUnrolled(d);
+						removeCharFromInitiativeOrder(d);
 						
 						System.out.println("Moved character " + characterName + " out of the map.");
 						return new ResponseEntity<> (new ObjectMapper().writeValueAsString(getAllCharacterNames()), HttpStatus.OK); // 200
@@ -662,6 +657,14 @@ public class PlayerMenuAPI {
 	        System.out.println("Exception : "+err.toString());
 	        return new ResponseEntity<> (err.toString(), HttpStatus.INTERNAL_SERVER_ERROR); // 500
 	    }
+	}
+	
+	public void removeCharFromInitiativeOrder(DndCharacter d) {
+		// update next character if already next character
+		if (gameData.getNextCharacterName() != null && gameData.getNextCharacterName().equals(d.getCharName())) {
+			gameData.findNextCharacterOnRemove();
+		}
+		gameData.removeCharacterFromInitMapUnrolled(d);
 	}
 	
 	@PostMapping(value = "/rollinitiative") // list of totals from PCs
