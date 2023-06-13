@@ -56,6 +56,12 @@ public class PlayerMenuAPI {
     final String backSlash ="%5C";
     final String forwardSlash ="%2F";
     final String xmlCheck = "%7B%22";
+    final String amperstand = "%26";
+    final String openParen = "%28";
+    final String closedParen = "%29";
+    final String apostrophe2 = "%E2%80%99";
+    final String weirdSpace = "%0D%0A";
+
 	
 	public PlayerMenuAPI(){
 		gameData = new GameData();
@@ -702,7 +708,7 @@ public class PlayerMenuAPI {
 	public String parseXML(String str) {
 		if (firstSix(str).equals(xmlCheck)) {
 			String parsedStr = "";
-//			System.out.println("XML string: " + str);
+			System.out.println("XML string: " + str);
 			str = str.replaceAll(openBracket, "{");
 			str = str.replaceAll(closedBracket, "}");
 			str = str.replaceAll(quotation, "\"");
@@ -713,8 +719,13 @@ public class PlayerMenuAPI {
 			str = str.replaceAll(plusSign, "+");
 			str = str.replaceAll(backSlash, "/");
 			str = str.replaceAll(forwardSlash, "/");
+			str = str.replaceAll(amperstand, "&");
+			str = str.replaceAll(openParen, "(");
+			str = str.replaceAll(closedParen, ")");
+			str = str.replaceAll(apostrophe2, "\'");
+			str = str.replaceAll(weirdSpace, " ");
 			parsedStr = removeTrailingEquals(str);
-//			System.out.println("parsedStr: " + parsedStr);
+			System.out.println("parsedStr: " + parsedStr);
 			return parsedStr;
 		}
 		return str;
@@ -799,7 +810,7 @@ public class PlayerMenuAPI {
 	public ResponseEntity<String> addTimedEffectEndpoint(@RequestBody String timedEffect) {
 		try {
 			timedEffect = parseXML(timedEffect);
-//			System.out.println("timed effect: " + timedEffect);
+			System.out.println("timed effect: " + timedEffect);
 			
 			String effect = "something is happening";
 			String effectTargets = "everywhere";

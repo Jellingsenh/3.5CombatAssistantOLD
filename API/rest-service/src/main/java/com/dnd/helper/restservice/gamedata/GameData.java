@@ -72,6 +72,7 @@ public class GameData implements Serializable {
 	public void addCharacterInMap(DndCharacter character, String mapLocation) {
 //		character.setMapLocationId(mapLocation);
 		charactersInMap.add(character);
+		addNewCharacterToInitMapUnrolled(character);// add to init map also
 		System.out.println("Character " + character.getCharName() + " added (in map, id = " + mapLocation + ").");
 	}
 	

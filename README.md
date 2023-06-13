@@ -1,4 +1,5 @@
 Created by Josh Haynes 26 Dec 2021
+Updated 12 June 2023. Version 1.2
 
 This is a game to help streamline D&D combat. It will help keep track of character health, damage, armor, abilities, skills, spells, and many other things. The purpose of the game is to free your brain of the details of combat so you can be more immersed in the role-playing.
 
