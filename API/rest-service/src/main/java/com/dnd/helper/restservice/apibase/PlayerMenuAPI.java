@@ -806,6 +806,7 @@ public class PlayerMenuAPI {
 //	    "effect":"+4 strength",
 //	    "targets": "john,jimp",
 //	    "durationRounds":"1",
+//		"charNameForInitAdded":"Somebody",
 //	}
 	public ResponseEntity<String> addTimedEffectEndpoint(@RequestBody String timedEffect) {
 		try {
@@ -814,6 +815,7 @@ public class PlayerMenuAPI {
 			
 			String effect = "something is happening";
 			String effectTargets = "everywhere";
+			String charNameForInitAdded = "default";
 			
 			JSONObject effectJson = new JSONObject(timedEffect);
 			String effectName = (String) effectJson.get("name");
@@ -831,8 +833,15 @@ public class PlayerMenuAPI {
 				System.out.println("invalid effectTargets, defaulting. Ignored exception: " + e.getMessage());
 
 			}
+			
+			try {
+				charNameForInitAdded = (String) effectJson.get("charNameForInitAdded");
+			} catch (Exception e) {
+				System.out.println("invalid charNameForInitAdded, defaulting. Ignored exception: " + e.getMessage());
 
-			if (gameData.addDurationEffect(effectName, effect, effectTargets, effectDuration)) {
+			}
+
+			if (gameData.addDurationEffect(effectName, effect, effectTargets, effectDuration, charNameForInitAdded)) {
 				return new ResponseEntity<> (new ObjectMapper().writeValueAsString(gameData.getDurationEffects()), HttpStatus.OK);
 			} else {
 				return new ResponseEntity<> ("Effect " + effectName + " already exists", HttpStatus.BAD_REQUEST);

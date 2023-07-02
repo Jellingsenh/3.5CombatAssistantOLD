@@ -12,6 +12,7 @@ public class TimedEffect implements Serializable {
 	private long timeLeft; // in rounds
 	// server-side only: 
 	private long timeEnd; // the round on which it will no longer be active
+	private int initToEndOn;
 	
 	public String getName() {
 		return name;
@@ -42,6 +43,12 @@ public class TimedEffect implements Serializable {
 	}
 	public void setTimeEnd(long timeEnd) {
 		this.timeEnd = timeEnd;
+	}
+	public int getInitToEndOn() {
+		return initToEndOn;
+	}
+	public void setInitToEndOn(int initToEndOn) {
+		this.initToEndOn = initToEndOn;
 	}
 	
 }

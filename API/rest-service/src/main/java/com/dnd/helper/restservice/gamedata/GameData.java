@@ -680,7 +680,7 @@ public class GameData implements Serializable {
 		this.durationEffects = durationEffects;
 	}
 	
-	public boolean addDurationEffect(String name, String effect, String targets, long durationRounds) {
+	public boolean addDurationEffect(String name, String effect, String targets, long durationRounds, String charNameForInitAdded) {
 		for (TimedEffect t: getDurationEffects()) {
 			if (t.getName().equals(name)) { // already exists
 				System.out.println("Timed effect " + name + " already exists.");
@@ -697,6 +697,10 @@ public class GameData implements Serializable {
 		
 		//server-side only:
 		durationEffect.setTimeEnd(durationRounds + getRoundsOfTimeAndYears());
+		
+		int endEffectInit = getCharacterInitFromInitOrder(charNameForInitAdded);
+		System.out.println(charNameForInitAdded + "\'s InitToEndOn: " + endEffectInit);
+		durationEffect.setInitToEndOn(endEffectInit); // defaults to current character init.
 	
 		getDurationEffects().add(durationEffect);
 		return true;
@@ -720,6 +724,7 @@ public class GameData implements Serializable {
 	}
 	
 	private void updateDurationEffects() {
+		System.out.println("Updating timed effects...");
 		long totalRoundsPassed = getRoundsOfTimeAndYears();
 		
 		Vector<TimedEffect> timedOut = new Vector<>();
@@ -727,7 +732,13 @@ public class GameData implements Serializable {
 		for (TimedEffect t: getDurationEffects()) {
 			if (totalRoundsPassed < t.getTimeEnd()) { // count up
 				t.setTimeLeft(t.getTimeEnd() - totalRoundsPassed);
-			} else { //remove
+			} else if (totalRoundsPassed == t.getTimeEnd()) { // only remove if past initToEndOn
+				t.setTimeLeft(0);
+				int currentInit = getCharacterInitFromInitOrder(getCurrentCharacterName());
+				if (t.getInitToEndOn() >= currentInit) {
+					timedOut.add(t);
+				}
+			} else { // remove
 				timedOut.add(t);
 			}
 		}
@@ -735,6 +746,30 @@ public class GameData implements Serializable {
 		for (TimedEffect removeEffect: timedOut) {
 			getDurationEffects().remove(removeEffect);
 		}
+	}
+	
+	public int getCharacterInitFromInitOrder(String charName) {
+		if (charName == null) {
+			return 0;
+		}
+				
+		if (charName.equals("default")) {
+			return getCharacterInitFromInitOrder(getCurrentCharacterName());
+		}
+		
+		String init = "";
+		for (Map<String,String> m : getInitiativeOrder()) {
+//			System.out.println(m);
+			if (m.get("name").equals(charName)) {
+				init = m.get("initTotal");
+				if (init != null && init != "") {
+//					System.out.println(charName + "\'s initiative: " + init);
+					return Integer.parseInt(init);
+				}
+			}			
+		}
+		System.out.println(charName + " was not found in the initiative list, defaulting to current character\'s initiative");
+		return getCharacterInitFromInitOrder(getCurrentCharacterName()); // default case, current initiative
 	}
 	
 	private long getRoundsOfTimeAndYears() {
